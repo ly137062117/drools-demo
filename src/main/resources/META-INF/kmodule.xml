@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<kmodule xmlns="http://www.drools.org/xsd/kmodule">
+    <!--基本语法-->
+    <kbase name="kbase1" packages="com.baidu.rulepackage1">
+        <ksession name="kession1"></ksession>
+    </kbase>
+
+    <!--LHS 基本常用属性-->
+    <kbase name="kbase2" packages="com.baidu.rulepackage2">
+        <ksession name="kession2"></ksession>
+    </kbase>
+
+    <!--rule 过滤器-->
+    <kbase name="kbase3" packages="com.baidu.rulepackage3">
+        <ksession name="kession3"></ksession>
+    </kbase>
+
+    <!--数据库 demo-->
+    <kbase name="kbase4" packages="com.baidu.rulepackage4">
+        <ksession name="kession4"></ksession>
+    </kbase>
+
+    <!--决策表-->
+    <kbase name="kbase5" packages="com.baidu.rulepackage5">
+        <ksession name="kession5"></ksession>
+    </kbase>
+
+    <!--DSL 领域语言-->
+    <kbase name="kbase6" packages="com.baidu.rulepackage6">
+        <ksession name="kession6"></ksession>
+    </kbase>
+</kmodule>

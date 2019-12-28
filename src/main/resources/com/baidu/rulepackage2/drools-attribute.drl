@@ -1,0 +1,128 @@
+/**
+ * @project: drools-demo
+ * @description:  drools 基本属性示例
+ * @author: luyao12
+ * @create: 2019-12-27 15:09
+ **/
+package com.baidu.rulepackage2;
+
+import com.baidu.droolsdemo.pojo.Staff;
+import com.baidu.droolsdemo.pojo.Company;
+
+rule "test_attr1"
+    no-loop
+    when
+        $staff:Staff(name=="卢瑶")
+    then
+        System.out.println("员工姓名" + $staff.getName());
+        update($staff)
+end
+
+
+rule "test_attr2"
+    // no-loop
+    // lock-on-active
+    when
+        $staff:Staff(age==18)
+    then
+        System.out.println("员工姓名" + $staff.getName() + "，年龄为" + $staff.getAge());
+        $staff.setName("卢瑶");
+        update($staff);
+end
+
+rule "test_attr3"
+    // no-loop
+    lock-on-active
+    when
+        $staff:Staff(name=="卢瑶")
+    then
+        System.out.println("员工姓名" + $staff.getName() + "，年龄为" + $staff.getAge());
+        $staff.setAge(18);
+        update($staff);
+end
+
+rule "test_attr4"
+    salience 3
+    when
+        $staff:Staff(name=="卢瑶")
+    then
+        System.out.println("test_attr4 executed！员工姓名" + $staff.getName() + "，年龄为" + $staff.getAge());
+end
+
+rule "test_attr5"
+    salience 5
+    when
+        $staff:Staff(age==18)
+    then
+        System.out.println("test_attr5 executed！员工姓名" + $staff.getName() + "，年龄为" + $staff.getAge());
+end
+
+rule "test_attr6"
+    salience 10
+    when
+        $staff:Staff(gender=="男")
+    then
+        System.out.println("test_attr6 executed！员工姓名" + $staff.getName() + "，年龄为" + $staff.getAge());
+end
+
+rule "test_attr7"
+//    enabled false
+    when
+        eval(true)
+    then
+        System.out.println("test_attr7 executed！");
+end
+
+ 生效时间及过期时间，可接受的日期格式为『dd-MMM-yyyy』
+rule "test_attr8"
+    date-effective "26-December-2019"
+    date-expires "26-December-2019"
+    when
+        eval(true)
+    then
+        System.out.println("test_attr8 executed！");
+end
+
+rule "test_attr9"
+    activation-group "group1"
+//    salience 3
+    when
+        eval(true)
+    then
+        System.out.println("test_attr9 executed！");
+end
+
+rule "test_attr10"
+    activation-group "group1"
+//    salience 5
+    when
+        eval(true)
+    then
+        System.out.println("test_attr10 executed！");
+end
+
+rule "test_attr11"
+    activation-group "group1"
+//    salience 10
+    when
+        eval(true)
+    then
+        System.out.println("test_attr11 executed！");
+end
+
+rule "test_attr12"
+    agenda-group "agenda1"
+//    auto-focus true
+    when
+        eval(true)
+    then
+        System.out.println("test_attr12 executed！");
+end
+
+rule "test_attr13"
+    timer (cron: */2 * * * * ?)
+    when
+        eval(true)
+    then
+        System.out.println("test_attr13 executed！");
+end

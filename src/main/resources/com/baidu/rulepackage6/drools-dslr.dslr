@@ -1,0 +1,14 @@
+package com.baidu.rulepackage6;
+
+import com.baidu.droolsdemo.pojo.Staff;
+
+expander drools-dsl.dsl
+
+规则名 "drools-dslr"
+    when
+        满足条件的员工
+            - 年龄 小于 30
+            - 性别 等于 "女"
+    then
+        输出员工姓名
+结束

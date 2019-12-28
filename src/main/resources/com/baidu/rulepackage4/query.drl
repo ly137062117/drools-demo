@@ -1,0 +1,29 @@
+/**
+ * @project: drools-demo
+ * @description:  drools 整合数据库示例（短地址跳转服务）
+ * @author: luyao12
+ * @create: 2019-12-27 15:09
+ **/
+package com.baidu.rulepackage4;
+
+import com.baidu.droolsdemo.pojo.UrlTrans
+
+rule "baiduUrl"
+    no-loop
+    when
+        $url:UrlTrans(shortUrl=="baidu")
+    then
+        // modify($url){setLongUrl("http://www." + $url.getShortUrl() + ".com")}
+        $url.setLongUrl("http://www.google.com");
+        update($url)
+end
+
+rule "googleUrl"
+    no-loop
+    when
+        $url:UrlTrans(shortUrl=="google")
+    then
+        // modify($url){setLongUrl("http://www." + $url.getShortUrl() + ".com")}
+        $url.setLongUrl("http://www.baidu.com");
+        update($url)
+end

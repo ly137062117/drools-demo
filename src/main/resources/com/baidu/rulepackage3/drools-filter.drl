@@ -1,0 +1,38 @@
+/**
+ * @project: drools-demo
+ * @description:  drools 规则名过滤示例
+ * @author: luyao12
+ * @create: 2019-12-27 15:09
+ **/
+package com.baidu.rulepackage3;
+
+import com.baidu.droolsdemo.pojo.Staff;
+import com.baidu.droolsdemo.pojo.Company;
+
+rule "staffNameStartsWith"
+    when
+        $staff:Staff(name str[startsWith] "王")
+    then
+        System.out.println("王姓开头的员工：" + $staff.getName());
+end
+
+rule "staffAgeLessThan18"
+    when
+        $staff:Staff(age<18)
+    then
+        System.out.println("小于18岁的员工：" + $staff.getName());
+end
+
+rule "staffGenderEqualsMale"
+    when
+        $staff:Staff(gender=="男")
+    then
+        System.out.println("男员工：" + $staff.getName());
+end
+
+rule "staffGenderEqualsFemale"
+    when
+        $staff:Staff(gender=="女")
+    then
+        System.out.println("女员工：" + $staff.getName());
+end

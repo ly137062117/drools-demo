@@ -1,0 +1,199 @@
+/**
+ * @project: drools-demo
+ * @description: drools 基本语法示例
+ * @author: luyao12
+ * @create: 2019-12-27 15:09
+ **/
+package com.baidu.rulepackage1;
+
+import com.baidu.droolsdemo.pojo.Staff;
+import com.baidu.droolsdemo.pojo.Company;
+
+import java.util.ArrayList
+
+query "queryByName"(String $name)
+    staff:Staff(name==$name)
+end
+
+query "queryByAge"(Integer $age)
+    staff:Staff(age==$age)
+end
+
+declare Group
+    groupName: String
+    staffList: ArrayList
+end
+
+rule "declare"
+    when
+        $staff:Staff()
+    then
+        Group group = new Group();
+        group.setGroupName("FSI");
+        group.setStaffList(com.google.common.collect.Lists.newArrayList($staff));
+        insert(group);
+end
+
+rule "group"
+    when
+        $group:Group(groupName=="FSI")
+    then
+        System.out.println("参会小组：" + $group);
+end
+
+// LHS 条件为空时
+rule "rule1"
+    when
+    then
+        System.out.println("rule1 executed！hello drools!");
+end
+
+// Pattern 匹配模式
+rule "rule2"
+    when
+        $staff:Staff(name=="卢瑶", age==18)
+    then
+        System.out.println("rule2 executed！hello! " + $staff.getName());
+end
+
+// 多 Pattern 匹配模式
+rule "rule3"
+    when
+        $staff:Staff(name=="卢瑶", age==18) and $company:Company($companyName:name=="百度")
+    then
+        System.out.println("rule3 executed！hello! staff：" + $staff.getName() + ", company：" + $companyName);
+end
+
+// 多事实匹配
+rule "rule4"
+    when
+        $staff:Staff(age==18)
+    then
+        System.out.println("rule4 executed！hello! staff：" + $staff.getName());
+end
+
+// LHS 运算符：+，-，*，/，%
+rule "rule5"
+    when
+        $staff:Staff(age/2==18)
+    then
+        System.out.println("rule5 executed！hello! staff：" + $staff.getName());
+end
+
+// LHS 约束连接
+rule "rule6"
+    when
+        not Company(name=="google")
+    then
+        System.out.println("rule6 executed！hello! no google exist!");
+end
+
+// LHS 比较操作符-contains
+rule "rule7"
+    when
+        $staff:Staff(name=="卢瑶") and $company:Company(name=="百度" && getStaffList() contains $staff)
+    then
+        System.out.println("rule7 executed！" + $staff.getName() + "是" + $company.getName() + "的员工");
+end
+
+// LHS 比较操作符-memberOf
+rule "rule8"
+    when
+        $staff:Staff(name=="卢瑶") and $company:Company(name=="百度" && $staff not memberOf getStaffList())
+    then
+        System.out.println("rule8 executed！" + $staff.getName() + "不是" + $company.getName() + "的员工");
+end
+
+// LHS 比较操作符-matches
+rule "rule9"
+    when
+        $staff:Staff(name matches "卢.*")
+    then
+        System.out.println("rule9 executed！" + $staff.getName() + " matches 卢*");
+end
+
+// LHS 比较操作符-soundslike
+rule "rule10"
+    when
+        $staff:Staff(name soundslike " case")
+    then
+        System.out.println("rule10 executed！" + $staff.getName() + "  soundslike case");
+end
+
+// LHS 比较操作符-str[startsWith|endWith|length]
+rule "rule11"
+    when
+        $staff:Staff(name str[startsWith] "卢")
+    then
+        System.out.println("rule11 executed！" + $staff.getName() + "   startsWith 卢");
+end
+
+// LHS 集合处理- List
+rule "rule12"
+    when
+        $staff:Staff(name=="卢瑶") and $company:Company(staffList.get(0).getName()==$staff.name)
+    then
+        System.out.println("rule12 executed！" + $staff.getName() + " 是" + $company.getName() + "的第一位员工");
+end
+
+// LHS 集合处理- List
+rule "rule13"
+    when
+        $staff:Staff(name=="卢瑶") and $company:Company(staffList[0].getName()==$staff.name)
+    then
+        System.out.println("rule13 executed！" + $staff.getName() + " 是" + $company.getName() + "的第一位员工");
+end
+
+// LHS 集合处理- map
+rule "rule14"
+    when
+        $staff:Staff(name=="卢瑶") and $company:Company(level.get($staff.getName())=="程序员")
+    then
+        System.out.println("rule14 executed！" + $staff.getName() + " 是" + $company.getName() + "的程序员");
+end
+
+// LHS 条件元素- from
+rule "rule15"
+    when
+        $company:Company(name=="百度") and $staff:Staff(gender=="男") from $company.staffList
+    then
+        System.out.println("rule15 executed！" + $staff.getName() + " 是" + $company.getName() + "的男员工");
+end
+
+// LHS 条件元素- from collect
+rule "rule16"
+    when
+        $list : ArrayList() from collect(Staff(gender=="男"))
+    then
+        System.out.println("rule16 executed！所有的男员工为：" + $list);
+end
+
+// LHS 条件元素- accumulate 内置功能
+rule "rule17"
+    when
+        accumulate(Staff($age:age>20, gender=="男"), $min:min($age), $max:max($age), $average:average($age))
+    then
+        System.out.println("rule17 executed！所有的男员工，最小年龄：" + $min + "，最大年龄：" + $max + "，平均年龄：" + $average);
+end
+
+// LHS 条件元素- accumulate 自定义计算
+rule "rule18"
+    when
+        $total:Integer() from
+        accumulate(Staff($age:age>20, gender=="男"),
+        init(Integer total=0),
+        action(System.out.println(">>>>>>累加员工年龄：" + $age);total+=$age;),
+        reverse(System.out.println(">>>>>>回滚员工年龄：" + $age);total-=$age;),
+        result(total))
+    then
+        System.out.println("rule18 executed！所有大于20岁的男员工年龄总和为：" + $total);
+end
+
+// LHS 条件元素- update
+rule "rule19"
+    when
+        $staff:Staff(name=="卢瑶")
+    then
+        $staff.setAge(30);
+        update($staff)
+end
